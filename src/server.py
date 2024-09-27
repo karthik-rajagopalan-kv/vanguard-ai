@@ -10,7 +10,7 @@ class HelloWorldResource:
 
 
 # Create Falcon API instance
-app = falcon.App()
+app = falcon.App(middleware=[falcon.CORSMiddleware(allow_origins="*", allow_credentials="*")])
 
 # Add route to HelloWorldResource
 hello_world = HelloWorldResource()
