@@ -1,4 +1,5 @@
 import falcon
+from src.api.resource import MailResource
 
 
 class HelloWorldResource:
@@ -14,3 +15,4 @@ app = falcon.App()
 # Add route to HelloWorldResource
 hello_world = HelloWorldResource()
 app.add_route("/hello", hello_world)
+app.add_route("/email/action", MailResource())
