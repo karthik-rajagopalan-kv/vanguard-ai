@@ -10,7 +10,7 @@ class MailResourceInput(Schema):
 
 class MailResource:
     def on_post(self, req, resp):
-        payload = req.context["json"]
+        payload = req.media
         email_content = payload.get("content", None)
         response = MailService().email_action(email_content=email_content)
 
