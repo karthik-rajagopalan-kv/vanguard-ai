@@ -2,6 +2,7 @@ import falcon
 import json
 
 from src.db.mock import createMockBotChat, createMockUserChat, createUserChat
+from src.api.resource import MailResource
 
 
 class HelloWorldResource:
@@ -37,7 +38,7 @@ class ChatResource:
 
 
 # Create Falcon API instance
-app = falcon.App()
+app = falcon.App(middleware=[falcon.CORSMiddleware(allow_origins="*", allow_credentials="*")])
 
 # Add route to HelloWorldResource
 hello_world = HelloWorldResource()
@@ -49,3 +50,4 @@ app.add_route("/hello", hello_world)
 app.add_route("/test", test)
 app.add_route("/chat", chatRes)
 
+app.add_route("/email/action", MailResource())
