@@ -12,4 +12,4 @@ class MailService:
         user_prompt = f"Mail content: {email_content}"
         response = llm.invoke([SystemMessage(content=prompt), HumanMessage(content=user_prompt)])
 
-        return response["content"]
+        return response.content
