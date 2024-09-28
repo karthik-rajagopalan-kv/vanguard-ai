@@ -8,11 +8,13 @@ from src.api.resource import MailResource
 
 from langchain_core.messages import HumanMessage, AIMessage
 
+
 class HelloWorldResource:
     def on_get(self, req, resp):
         """Handles GET requests"""
         resp.status = falcon.HTTP_200  # HTTP status code
         resp.media = {"message": "Hello, World!"}
+
 
 class TestResource:
     def on_get(self, req, resp):
@@ -22,36 +24,43 @@ class TestResource:
         resp.status = falcon.HTTP_200  # HTTP status code
         resp.media = {"message": "MOCK DATA"}
 
+
 class ChatResource:
     def on_post(self, req, resp):
         """Handles POST requests to create a chat message"""
         # Parse the JSON body
-        raw_json = req.stream.read().decode('utf-8')
+        raw_json = req.stream.read().decode("utf-8")
         data = json.loads(raw_json)
 
         # Extract fields from the JSON data
-        thread_id = data.get('thread_id')
-        message = data.get('message')
-        sender_name = data.get('senderName')
-        subject_type = data.get('subjectType')
+        thread_id = data.get("thread_id")
+        message = data.get("message")
+        sender_name = data.get("senderName")
+        subject_type = data.get("subjectType")
 
-        chat = createUserChat(thread_id=thread_id, message=message,senderName=sender_name)
+        createUserChat(thread_id=thread_id, message=message, senderName=sender_name)
 
-
-        if(subject_type=='learning'):
-            print('here',message )
-            ragp =  RAGProcessor()
+        if subject_type == "learning":
+            print("here", message)
+            ragp = RAGProcessor()
             chatList = get_chats_by_thread_id(thread_id)
-            # history = 
-            chatHist: 
-            res = ragp.chat(message,[])
-            print('res', res)
-            botChat = createBotChat(thread_id=thread_id, message=res,metaData={})
+            chat_history = self._format_chats(chatList)
+            res = ragp.chat(user_input=message, chat_history=chat_history)
+            print("res", res)
+            createBotChat(thread_id=thread_id, message=res, metaData={})
+            resp.status = falcon.HTTP_201  # HTTP status code for resource created
+            resp.text = res
 
-
-
-        resp.status = falcon.HTTP_201  # HTTP status code for resource created
-        resp.media = chat
+    def _format_chats(self, chats):
+        processed_chats = []
+        for chat in chats:
+            if chat.sender_type == "sales_agent":
+                processed_chats.append(HumanMessage(content=chat.message))
+            elif chat.sender_type == "chatbot":
+                processed_chats.append(AIMessage(content=chat.message))
+            else:
+                continue
+        return processed_chats
 
 
 # Create Falcon API instance
