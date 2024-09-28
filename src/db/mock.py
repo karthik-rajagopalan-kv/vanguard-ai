@@ -37,13 +37,12 @@ def createUserChat(thread_id, message, senderName):
     }
     new_chat = create_chat(new_chat_data)
 
-def createBotChat(thread_id, message, messageType, metaData ):
-    thread_id = '661e4c51-c649-4429-a0fd-9b245c2dc42d'
+def createBotChat(thread_id, message, metaData ):
 
     new_chat_data = {
-        'message': 'AI message',
+        'message': message,
         'messageType': 'prompt_reply',
-        'metaData': {'key': 'value'},
+        'metaData': metaData,
         'senderName': 'Sales Genie',
         'senderType': 'chatbot',
         'threadId': thread_id

@@ -1,3 +1,4 @@
+from typing import List
 from peewee import DoesNotExist
 import uuid
 import json
@@ -12,7 +13,7 @@ def get_chat_by_id(chat_id: str):
         return None  # Handle if no record is found
 
 # Method to fetch all Chats by Thread ID
-def get_chats_by_thread_id(thread_id: str):
+def get_chats_by_thread_id(thread_id: str)-> List[Chat]: 
     try:
         chats = Chat.select().where(Chat.thread_id == uuid.UUID(thread_id))
         return list(chats)  # Return as list

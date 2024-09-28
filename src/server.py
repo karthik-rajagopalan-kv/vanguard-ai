@@ -1,9 +1,12 @@
 import falcon
 import json
 
-from src.db.mock import createMockBotChat, createMockUserChat, createUserChat
+from src.db.repository import get_chats_by_thread_id
+from src.rag.rag import RAGProcessor
+from src.db.mock import createBotChat, createMockBotChat, createMockUserChat, createUserChat
 from src.api.resource import MailResource
 
+from langchain_core.messages import HumanMessage, AIMessage
 
 class HelloWorldResource:
     def on_get(self, req, resp):
@@ -30,8 +33,22 @@ class ChatResource:
         thread_id = data.get('thread_id')
         message = data.get('message')
         sender_name = data.get('senderName')
+        subject_type = data.get('subjectType')
 
         chat = createUserChat(thread_id=thread_id, message=message,senderName=sender_name)
+
+
+        if(subject_type=='learning'):
+            print('here',message )
+            ragp =  RAGProcessor()
+            chatList = get_chats_by_thread_id(thread_id)
+            # history = 
+            chatHist: 
+            res = ragp.chat(message,[])
+            print('res', res)
+            botChat = createBotChat(thread_id=thread_id, message=res,metaData={})
+
+
 
         resp.status = falcon.HTTP_201  # HTTP status code for resource created
         resp.media = chat
