@@ -41,12 +41,10 @@ class ChatResource:
         createUserChat(thread_id=thread_id, message=message, senderName=sender_name)
 
         if subject_type == "learning":
-            print("here", message)
             ragp = RAGProcessor()
             chatList = get_chats_by_thread_id(thread_id)
             chat_history = self._format_chats(chatList)
             res = ragp.chat(user_input=message, chat_history=chat_history)
-            print("res", res)
             createBotChat(thread_id=thread_id, message=res, metaData={})
             resp.status = falcon.HTTP_201  # HTTP status code for resource created
             resp.text = res
